@@ -16,6 +16,7 @@ import { generateChartData } from '@/data/mockData';
 interface PriceChartProps {
   title?: string;
   showTimeSelector?: boolean;
+  showExpand?: boolean;
   height?: number;
   compact?: boolean;
   countryCode?: string;
@@ -27,6 +28,7 @@ type TimeRange = '7d' | '30d' | '1y';
 export default function PriceChart({
   title = 'Price Trend',
   showTimeSelector = true,
+  showExpand = true,
   height = 350,
   compact = false,
   countryCode = 'all',
@@ -73,24 +75,33 @@ export default function PriceChart({
       {isExpanded && (
         <div className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm" onClick={() => setIsExpanded(false)} />
       )}
-      <Card className={`border-0 shadow-card bg-card overflow-hidden transition-all duration-300 ${isExpanded ? 'fixed inset-4 md:inset-8 z-50 flex flex-col' : ''}`}>
+      <Card className={`border-0 shadow-premium bg-card overflow-hidden transition-all duration-500 ease-in-out ${
+        isExpanded 
+          ? 'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] h-[85vh] max-w-6xl z-50 flex flex-col scale-100 opacity-100 shadow-2xl' 
+          : 'relative shadow-card scale-100 opacity-100'
+      }`}>
       {!compact && (
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-lg font-semibold text-foreground">
-            {title}
-          </CardTitle>
-          <div className="flex items-center gap-2">
+        <CardHeader className={`flex flex-row items-center justify-between transition-all duration-300 ${isExpanded ? 'p-8 pb-4' : 'pb-2'}`}>
+          <div className="flex flex-col gap-1">
+            <CardTitle className={`${isExpanded ? 'text-2xl' : 'text-lg'} font-bold text-foreground tracking-tight`}>
+              {title}
+            </CardTitle>
+            {isExpanded && (
+              <p className="text-sm text-muted-foreground font-medium">Institutional Market Data Stream • Real-time Sync</p>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
             {showTimeSelector && (
-              <div className="flex gap-1">
+              <div className="flex bg-muted/50 p-1 rounded-xl">
                 {timeOptions.map((option) => (
                   <Button
                     key={option.value}
-                    variant={timeRange === option.value ? 'default' : 'ghost'}
+                    variant="ghost"
                     size="sm"
                     onClick={() => setTimeRange(option.value)}
-                    className={`text-xs h-8 px-3 ${
+                    className={`text-xs font-bold h-8 px-4 rounded-lg transition-all ${
                       timeRange === option.value
-                        ? 'bg-primary text-white'
+                        ? 'bg-primary text-white shadow-sm scale-105'
                         : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
@@ -99,51 +110,72 @@ export default function PriceChart({
                 ))}
               </div>
             )}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="h-8 w-8 text-muted-foreground hover:text-foreground"
-            >
-              {isExpanded ? <X className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
-            </Button>
+            {showExpand && (
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setIsExpanded(!isExpanded)}
+                className={`h-9 w-9 rounded-xl border-foreground/5 shadow-sm transition-all hover:scale-105 ${isExpanded ? 'bg-primary/5 border-primary/20 text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                {isExpanded ? <X className="h-5 w-5" /> : <Maximize2 className="h-4 w-4" />}
+              </Button>
+            )}
           </div>
         </CardHeader>
       )}
-      <CardContent className={`${compact ? 'p-4' : 'pt-0'} relative ${isExpanded ? 'flex-1 min-h-0' : ''}`}>
-        <ResponsiveContainer width="100%" height={isExpanded ? '100%' : height}>
-          <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+      <CardContent className={`${compact ? 'p-4' : 'pt-0'} relative ${isExpanded ? 'flex-1 p-8 pt-4 min-h-0' : ''}`}>
+        <ResponsiveContainer width="100%" height="100%" minHeight={isExpanded ? 0 : height}>
+          <AreaChart 
+            data={data} 
+            margin={isExpanded 
+              ? { top: 20, right: 30, left: 10, bottom: 40 } 
+              : { top: 10, right: 10, left: 0, bottom: 0 }
+            }
+          >
             <defs>
               <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#2E7D32" stopOpacity={0.15} />
+                <stop offset="5%" stopColor="#2E7D32" stopOpacity={0.2} />
                 <stop offset="95%" stopColor="#2E7D32" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-border/30" vertical={false} />
+            <CartesianGrid 
+              strokeDasharray="4 4" 
+              stroke="currentColor" 
+              className="text-border/30" 
+              vertical={false} 
+            />
             <XAxis
               dataKey="date"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
-              dy={10}
-              minTickGap={30}
+              tick={{ 
+                fill: 'hsl(var(--muted-foreground))', 
+                fontSize: isExpanded ? 12 : 11,
+                fontWeight: isExpanded ? 600 : 500
+              }}
+              dy={15}
+              minTickGap={isExpanded ? 40 : 30}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
+              tick={{ 
+                fill: 'hsl(var(--muted-foreground))', 
+                fontSize: isExpanded ? 12 : 11,
+                fontWeight: isExpanded ? 600 : 500
+              }}
               tickFormatter={(value) => `$${value.toFixed(2)}`}
-              dx={-10}
+              dx={-15}
             />
             <Tooltip content={<CustomTooltip />} />
             <Area
               type="monotone"
               dataKey="price"
               stroke="#4CAF50"
-              strokeWidth={2}
+              strokeWidth={isExpanded ? 3 : 2}
               fillOpacity={1}
               fill="url(#colorPrice)"
-              animationDuration={1000}
+              animationDuration={1500}
             />
           </AreaChart>
         </ResponsiveContainer>

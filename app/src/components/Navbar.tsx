@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, TrendingUp, ShoppingCart, Newspaper, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Logo from '@/components/Logo';
 import {
   Sheet,
   SheetContent,
@@ -32,8 +33,8 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${isScrolled
-          ? 'bg-background/95 backdrop-blur-md shadow-sm border-b border-border/50'
+      className={`fixed top-0 z-50 w-full transition-all duration-500 ${isScrolled
+          ? 'bg-background/80 backdrop-blur-3xl border-b border-foreground/[0.03] shadow-premium'
           : 'bg-transparent'
         }`}
     >
@@ -41,9 +42,7 @@ export default function Navbar() {
         <nav className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm group-hover:scale-105 transition-all duration-300">
-              <img src="/avocado-removebg-preview.png" alt="AvoPrice" className="w-full h-full object-cover" />
-            </div>
+            <Logo size={40} className="group-hover:scale-105 transition-all duration-300" />
             <div className="flex flex-col">
               <span className="text-lg font-bold bg-gradient-to-r from-[#2E7D32] to-[#4CAF50] bg-clip-text text-transparent">
                 AvoPrice
@@ -105,9 +104,7 @@ export default function Navbar() {
               <div className="flex flex-col gap-6 mt-6 h-full pb-8">
                 {/* Mobile Logo */}
                 <Link to="/" className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center">
-                    <img src="/avocado-removebg-preview.png" alt="AvoPrice" className="w-full h-full object-cover" />
-                  </div>
+                  <Logo size={32} />
                   <span className="text-lg font-bold text-primary">AvoPrice</span>
                 </Link>
 

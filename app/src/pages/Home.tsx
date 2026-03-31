@@ -47,13 +47,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Chart Preview Section */}
       <section className="py-20 bg-background border-y border-foreground/5 relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.04] pointer-events-none" 
              style={{ backgroundImage: 'radial-gradient(currentColor 0.5px, transparent 0)', backgroundSize: '16px 16px' }} />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
+          <div>
+            <div className="mb-8">
               <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-[0.25em] bg-primary/10 text-primary mb-6 border border-primary/20">
                 <TrendingUp className="w-3 h-3" />
                 <span>Advanced Analytics</span>
@@ -61,23 +60,23 @@ export default function Home() {
               <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground mb-4 tracking-tight leading-tight">
                 Avocado Market Intelligence Terminal
               </h2>
-              <p className="text-md text-muted-foreground mb-8 leading-relaxed max-w-lg font-medium">
+              <p className="text-md text-muted-foreground mb-8 leading-relaxed max-w-2xl font-medium">
                 Access deep-tier historical avocado pricing data and seasonality index tracking. 
                 Our platform provides the precision required for high-volume 
                 commercial sourcing and distribution.
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mt-12 bg-card p-8 rounded-leaf border border-foreground/10 shadow-sm relative overflow-hidden">
-                <div className="order-2 md:order-1">
-                  <h3 className="text-xl font-display font-bold text-foreground mb-4 tracking-tight"> Market Composition </h3>
-                  <p className="text-sm text-muted-foreground mb-8 leading-relaxed max-w-sm font-medium">
-                    Our 'Cross-Section' algorithm tracks the three tiers of global avocado trade: 
-                    Premium Organic (Skin), Standard Commercial (Flesh), and Core Wholesale (Pit).
-                  </p>
-                  <MarketComposition />
-                </div>
-                <div className="order-1 md:order-2">
-                  <PriceChart title="Global Hass Benchmark (30D)" height={400} />
-                </div>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start bg-card p-8 rounded-leaf border border-foreground/10 shadow-sm relative overflow-hidden">
+              <div className="lg:col-span-2">
+                <h3 className="text-xl font-display font-bold text-foreground mb-2 tracking-tight">Market Composition</h3>
+                <p className="text-sm text-muted-foreground mb-6 leading-relaxed font-medium">
+                  Our 'Cross-Section' algorithm tracks the three tiers of global avocado trade: 
+                  Premium Organic (Skin), Standard Commercial (Flesh), and Core Wholesale (Pit).
+                </p>
+                <MarketComposition />
+              </div>
+              <div className="lg:col-span-3">
+                <PriceChart title="Global Hass Benchmark (30D)" height={420} showExpand={false} />
               </div>
             </div>
           </div>

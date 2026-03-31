@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Search, Calendar, ExternalLink, Newspaper, RefreshCw } from 'lucide-react';
+import { Search, Calendar, ExternalLink, Newspaper, RefreshCw, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import NewsCard from '@/components/NewsCard';
 import TerminalLoader from '@/components/TerminalLoader';
 import { fetchAvocadoNews } from '@/lib/api';
 import type { NewsArticle } from '@/data/mockData';
@@ -51,74 +53,106 @@ export default function News() {
   };
 
   return (
-    <main className="min-h-screen bg-muted/30">
-      {/* Header */}
-      <div className="bg-background border-b border-border">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
-                Avocado News & Insights
+    <main className="min-h-screen bg-background relative overflow-hidden">
+      {/* Background Ambience */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[140px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#E8F5E9]/20 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/3 pointer-events-none" />
+
+      {/* Hero Header - Deep Forest Ambient Style */}
+      <section className="relative pt-16 pb-14 bg-gradient-to-b from-primary/10 via-background/50 to-transparent border-b border-foreground/[0.03]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between items-start gap-8">
+            <div className="max-w-3xl">
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="inline-flex items-center gap-2.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.25em] bg-primary/10 text-primary mb-8 border border-primary/20 backdrop-blur-sm"
+              >
+                <Sparkles className="w-3 h-3" />
+                <span>Market Intelligence Stream</span>
+              </motion.div>
+              <h1 className="text-5xl sm:text-6xl font-display font-bold text-foreground tracking-tight leading-[0.9] mb-8">
+                Avocado News <br /> & Insights
               </h1>
-              <p className="text-muted-foreground mt-1">
-                Stay informed with the latest market trends and industry updates
+              <p className="text-xl text-muted-foreground leading-relaxed font-medium max-w-xl">
+                Global supply-chain forensics and high-frequency trading narratives 
+                delivered through our bespoke intelligence terminal.
               </p>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={loadNews}
-              disabled={loading}
-            >
-              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-              Refresh
-            </Button>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+               <Button
+                variant="outline"
+                size="sm"
+                onClick={loadNews}
+                disabled={loading}
+                className="bg-card/50 backdrop-blur-md border-foreground/10 text-[10px] font-extrabold uppercase tracking-[0.2em] px-8 h-12 rounded-leaf shadow-premium hover:bg-card hover:shadow-xl hover:border-primary/30 transition-all"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 mr-2.5 ${loading ? 'animate-spin' : ''}`} />
+                Sync Intelligence
+              </Button>
+            </motion.div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Search Bar */}
-        <div className="max-w-2xl mx-auto mb-10">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-32 relative z-10">
+        {/* Search Bar - High Contrast Terminal Style */}
+        <div className="max-w-4xl mx-auto mb-20">
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="relative group"
+          >
+            <div className="absolute inset-0 bg-primary/5 rounded-leaf blur-xl group-focus-within:bg-primary/10 transition-all opacity-0 group-focus-within:opacity-100" />
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-muted-foreground group-focus-within:text-primary transition-colors z-20" />
             <Input
-              placeholder="Search news articles..."
+              placeholder="QUERY GLOBAL DATASETS..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 h-14 text-lg bg-card border-border shadow-sm"
+              className="pl-16 h-20 text-sm font-mono font-bold bg-card/80 backdrop-blur-xl border-foreground/10 rounded-leaf shadow-xl group-focus-within:border-primary/40 transition-all uppercase tracking-widest relative z-10"
             />
-          </div>
+            <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-3 z-20 pointer-events-none opacity-50">
+               <span className="text-[10px] font-mono border border-foreground/20 rounded px-2 py-1">CMD</span>
+               <span className="text-[10px] font-mono border border-foreground/20 rounded px-2 py-1">K</span>
+            </div>
+          </motion.div>
         </div>
 
-        {/* Featured Article */}
-        {!loading && !error && filteredArticles.length > 0 && (
-          <div className="mb-10">
-            <Card className="border-0 shadow-card bg-card overflow-hidden">
+        {/* Featured Article - Institutional Focal Point */}
+        {!loading && !error && filteredArticles.length > 0 && searchQuery === '' && (
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-20"
+          >
+            <Card className="border-foreground/10 shadow-2xl bg-card rounded-leaf overflow-hidden group">
               <CardContent className="p-0">
-                <div className="grid md:grid-cols-2">
-                  <div className="relative h-64 md:h-auto bg-gradient-to-br from-[#e8f5e9] to-[#c8e6c9] flex items-center justify-center overflow-hidden">
+                <div className="grid lg:grid-cols-5 min-h-[480px]">
+                  <div className="lg:col-span-3 relative bg-muted/40 overflow-hidden">
                     {filteredArticles[0].imageUrl ? (
                       <img
                         src={filteredArticles[0].imageUrl}
                         alt={filteredArticles[0].title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s] ease-out"
                       />
                     ) : (
-                      <Newspaper className="w-24 h-24 text-primary/30" />
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
+                        <Newspaper className="w-32 h-32 text-primary opacity-20" />
+                      </div>
                     )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none opacity-40" />
                   </div>
-                  <div className="p-6 md:p-8 flex flex-col justify-center">
-                    <div className="flex items-center gap-3 mb-4">
-                      <Badge className="bg-primary/10 text-primary">
+                  <div className="lg:col-span-2 p-10 sm:p-14 flex flex-col justify-center relative">
+                    <div className="flex items-center gap-4 mb-10">
+                      <Badge className="bg-primary hover:bg-primary text-white px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg pointer-events-none">
                         {filteredArticles[0].source}
                       </Badge>
-                      <span className="text-sm text-muted-foreground flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
+                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                        <Calendar className="w-3.5 h-3.5" />
                         {formatDate(filteredArticles[0].publishedAt)}
                       </span>
                     </div>
-                    <h2 className="text-xl md:text-2xl font-bold text-foreground mb-3 hover:text-primary transition-colors">
+                    <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground mb-8 leading-[1.1] group-hover:text-primary transition-colors tracking-tight">
                       <a
                         href={filteredArticles[0].url}
                         target="_blank"
@@ -127,23 +161,25 @@ export default function News() {
                         {filteredArticles[0].title}
                       </a>
                     </h2>
-                    <p className="text-muted-foreground mb-6 leading-relaxed">
+                    <p className="text-lg text-muted-foreground/90 dark:text-muted-foreground/80 mb-10 leading-relaxed font-medium">
                       {filteredArticles[0].description}
                     </p>
-                    <a
-                      href={filteredArticles[0].url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-primary font-medium hover:underline"
-                    >
-                      Read Full Article
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
+                    <div className="flex items-center gap-8 mt-auto">
+                      <a
+                        href={filteredArticles[0].url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-4 text-[11px] font-black text-primary uppercase tracking-[0.3em] group/link"
+                      >
+                        Source Intelligence Data
+                        <ExternalLink className="w-4 h-4 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-all" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </motion.div>
         )}
 
         {/* Loading State */}
@@ -155,96 +191,44 @@ export default function News() {
 
         {/* Error State */}
         {error && !loading && (
-          <div className="text-center py-16">
-            <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-red-500/10 flex items-center justify-center">
+          <div className="text-center py-24 bg-card/50 backdrop-blur rounded-leaf border border-foreground/5 shadow-sm">
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-red-500/10 flex items-center justify-center">
               <RefreshCw className="w-10 h-10 text-red-500" />
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">{error}</h3>
-            <Button onClick={loadNews} variant="outline">
-              Try Again
+            <h3 className="text-xl font-display font-bold text-foreground mb-4">{error}</h3>
+            <Button onClick={loadNews} variant="outline" className="rounded-xl border-foreground/10">
+              Force Sync
             </Button>
           </div>
         )}
 
-        {/* Articles Grid */}
+        {/* Articles Grid - Unified Component */}
         {!loading && !error && (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredArticles.slice(1).map((article) => (
-              <Card
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredArticles.slice(searchQuery === '' ? 1 : 0).map((article, i) => (
+              <motion.div
                 key={article.id}
-                className="group overflow-hidden border-0 shadow-card hover:shadow-lg transition-all duration-300 hover:scale-[1.02] bg-card"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
               >
-                <CardContent className="p-0">
-                  {/* Image */}
-                  <div className="relative h-48 bg-gradient-to-br from-[#e8f5e9] to-[#c8e6c9] overflow-hidden">
-                    {article.imageUrl ? (
-                      <img
-                        src={article.imageUrl}
-                        alt={article.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <Newspaper className="w-16 h-16 text-primary/30" />
-                      </div>
-                    )}
-                    <div className="absolute top-3 left-3">
-                      <Badge className="bg-background/90 text-primary font-medium backdrop-blur-sm border-primary/20">
-                        {article.source}
-                      </Badge>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-5">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Calendar className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">
-                        {formatDate(article.publishedAt)}
-                      </span>
-                    </div>
-
-                    <h3 className="font-semibold text-lg text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                      <a
-                        href={article.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {article.title}
-                      </a>
-                    </h3>
-
-                    <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                      {article.description}
-                    </p>
-
-                    <a
-                      href={article.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-                    >
-                      Read More
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>
+                <NewsCard article={article} />
+              </motion.div>
             ))}
           </div>
         )}
 
         {/* Empty State */}
         {!loading && !error && filteredArticles.length === 0 && (
-          <div className="text-center py-16">
-            <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
-              <Search className="w-10 h-10 text-muted-foreground" />
+          <div className="text-center py-32 bg-white/20 backdrop-blur rounded-leaf border border-foreground/5 shadow-sm">
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-muted/50 flex items-center justify-center">
+              <Search className="w-10 h-10 text-muted-foreground/50" />
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">
-              No articles found
+            <h3 className="text-xl font-display font-bold text-foreground mb-2">
+              No matching intelligence
             </h3>
-            <p className="text-muted-foreground">
-              Try adjusting your search query
+            <p className="text-muted-foreground font-medium uppercase tracking-widest text-[10px]">
+              Review your search parameters
             </p>
           </div>
         )}
