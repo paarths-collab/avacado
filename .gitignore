@@ -1,0 +1,36 @@
+# Root .gitignore for AvoPrice workspace
+
+# Node.js
+**/node_modules
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+
+# Build outputs
+**/dist
+**/build
+**/.next/
+**/out/
+
+# Environment variables
+**/.env
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+
+# IDE / Editor
+**/.vscode
+**/.idea
+**/*.swp
+**/*.swo
+**/*.DS_Store
+
+# Logs
+**/logs
+**/*.log
+
+# Project specific
+**/tmp
+**/temp
+**/artifacts
