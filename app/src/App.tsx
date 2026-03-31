@@ -31,7 +31,7 @@ function AppContent() {
       <GuacamoleBackground />
       <Navbar />
       <RouteLoader />
-      <div className="flex-1">
+      <div className="flex-1 pt-24">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<PageTransition><Home /></PageTransition>} />

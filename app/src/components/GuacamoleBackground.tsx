@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 
 export default function GuacamoleBackground() {
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-[-1] bg-[#FDFCF8]">
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-[-1] bg-background">
       <motion.div 
         animate={{ 
           x: [0, 80, 0], 
