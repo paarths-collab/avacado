@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import Hero from '@/components/Hero';
 import PriceCard from '@/components/PriceCard';
 import PriceChart from '@/components/PriceChart';
+import MarketComposition from '@/components/MarketComposition';
 import MarketplaceCard from '@/components/MarketplaceCard';
 import NewsCard from '@/components/NewsCard';
 import Footer from '@/components/Footer';
@@ -20,25 +21,25 @@ export default function Home() {
       <Hero />
 
       {/* Bento Box Dashboard Section */}
-      <section className="py-12 -mt-8 relative z-20">
+      <section className="py-12 -mt-10 relative z-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-4">
             <div>
-              <h2 className="text-xl font-bold text-foreground tabular-nums flex items-center gap-2">
+              <h2 className="text-xl font-display font-bold text-foreground tabular-nums flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 Live Market Overview
               </h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest opacity-70">
                 Aggregated pricing data from global hubs
               </p>
             </div>
-            <Link to="/prices" className="text-xs font-semibold text-primary hover:underline flex items-center gap-1 uppercase tracking-widest">
+            <Link to="/prices" className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1 uppercase tracking-[0.2em] bg-white px-3 py-1.5 rounded-lg border border-foreground/10 hover:border-foreground/20 transition-all">
               Full Terminal
               <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {topPrices.map((price) => (
               <PriceCard key={price.code} data={price} />
             ))}
@@ -47,65 +48,56 @@ export default function Home() {
       </section>
 
       {/* Chart Preview Section */}
-      <section className="py-20 bg-background border-y border-border/40 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none" 
-             style={{ backgroundImage: 'radial-gradient(currentColor 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+      <section className="py-20 bg-background border-y border-foreground/5 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.04] pointer-events-none" 
+             style={{ backgroundImage: 'radial-gradient(currentColor 0.5px, transparent 0)', backgroundSize: '16px 16px' }} />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest bg-primary/10 text-primary mb-6 border border-primary/20">
+              <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-[0.25em] bg-primary/10 text-primary mb-6 border border-primary/20">
                 <TrendingUp className="w-3 h-3" />
                 <span>Advanced Analytics</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 tracking-tight">
+              <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground mb-4 tracking-tight leading-tight">
                 Avocado Market Intelligence Terminal
               </h2>
-              <p className="text-sm text-muted-foreground mb-8 leading-relaxed max-w-lg">
+              <p className="text-md text-muted-foreground mb-8 leading-relaxed max-w-lg font-medium">
                 Access deep-tier historical avocado pricing data and seasonality index tracking. 
                 Our platform provides the precision required for high-volume 
                 commercial sourcing and distribution.
               </p>
-              <ul className="space-y-4 mb-10">
-                {[
-                  'Hass vs. Tropical price correlation',
-                  'Predictive harvest yield modeling',
-                  'Custom regional delivery alerts',
-                  'Full API data export (JSON/CSV)',
-                ].map((feature, index) => (
-                  <li key={index} className="flex items-center gap-3 text-sm font-medium text-foreground">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-              <Link to="/prices">
-                <Button className="bg-foreground text-background hover:bg-foreground/90 px-8 h-12 text-sm font-semibold">
-                  Open Terminal
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </Link>
-            </div>
-            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-soft relative">
-              <PriceChart title="Global Hass Benchmark (30D)" height={320} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mt-12 bg-card p-8 rounded-leaf border border-foreground/10 shadow-sm relative overflow-hidden">
+                <div className="order-2 md:order-1">
+                  <h3 className="text-xl font-display font-bold text-foreground mb-4 tracking-tight"> Market Composition </h3>
+                  <p className="text-sm text-muted-foreground mb-8 leading-relaxed max-w-sm font-medium">
+                    Our 'Cross-Section' algorithm tracks the three tiers of global avocado trade: 
+                    Premium Organic (Skin), Standard Commercial (Flesh), and Core Wholesale (Pit).
+                  </p>
+                  <MarketComposition />
+                </div>
+                <div className="order-1 md:order-2">
+                  <PriceChart title="Global Hass Benchmark (30D)" height={400} />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Marketplace Preview Section */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-24 bg-muted/5">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest bg-emerald-100 text-emerald-800 mb-4 border border-emerald-200">
+              <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-[0.25em] bg-emerald-500/10 text-emerald-800 dark:text-emerald-500 mb-4 border border-emerald-500/20">
                 <ShoppingCart className="w-3 h-3" />
                 <span>Spot Market</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+              <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground tracking-tight">
                 Verified Global Suppliers
               </h2>
             </div>
-            <Link to="/marketplace" className="text-xs font-bold text-primary hover:underline flex items-center gap-1 uppercase tracking-widest bg-card px-4 py-2 rounded-lg border border-border/50 transition-colors">
+            <Link to="/marketplace" className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1 uppercase tracking-[0.2em] bg-white px-4 py-2.5 rounded-xl border border-foreground/10 transition-all hover:border-foreground/20">
               Source Inventory
               <ArrowRight className="w-3 h-3" />
             </Link>
@@ -122,19 +114,19 @@ export default function Home() {
 
 
       {/* News Preview Section */}
-      <section className="py-20 bg-background border-t border-border/40">
+      <section className="py-24 bg-background border-t border-foreground/5">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest bg-blue-500/10 text-blue-500 mb-4 border border-blue-500/20">
+              <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-[0.25em] bg-blue-500/10 text-blue-600 mb-4 border border-blue-500/20">
                 <Newspaper className="w-3 h-3" />
                 <span>Briefing</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+              <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground tracking-tight">
                 Global Industry Intelligence
               </h2>
             </div>
-            <Link to="/news" className="text-xs font-bold text-primary hover:underline flex items-center gap-1 uppercase tracking-widest bg-card px-4 py-2 rounded-lg border border-border/50 transition-colors">
+            <Link to="/news" className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1 uppercase tracking-[0.2em] bg-white px-4 py-2.5 rounded-xl border border-foreground/10 transition-all hover:border-foreground/20">
               All News
               <ArrowRight className="w-3 h-3" />
             </Link>

@@ -2,6 +2,8 @@ import { useMemo } from 'react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Area, AreaChart, ResponsiveContainer, YAxis } from 'recharts';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useDataTick } from '@/hooks/useDataTick';
 import type { PriceData } from '@/data/mockData';
 
 interface PriceCardProps {
@@ -11,6 +13,7 @@ interface PriceCardProps {
 
 export default function PriceCard({ data, onClick }: PriceCardProps) {
   const isPositive = data.change >= 0;
+  const { isTickUp, isTickDown } = useDataTick(data.price);
 
   // Generate stable mock history based on the price and change
   const sparklineData = useMemo(() => {
@@ -31,34 +34,53 @@ export default function PriceCard({ data, onClick }: PriceCardProps) {
   return (
     <Card
       onClick={onClick}
-      className="group cursor-pointer overflow-hidden border border-border/50 bg-card shadow-none hover:shadow-premium hover:-translate-y-0.5 transition-all duration-300 rounded-xl"
+      className="group cursor-pointer overflow-hidden border border-foreground/10 bg-card shadow-none hover:border-foreground/20 transition-all duration-300 rounded-leaf relative"
     >
+      <AnimatePresence>
+        {isTickUp && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.15 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-emerald-500 pointer-events-none z-10"
+          />
+        )}
+        {isTickDown && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.15 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-red-500 pointer-events-none z-10"
+          />
+        )}
+      </AnimatePresence>
+
       <CardContent className="p-5">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
             {/* Country */}
             <div className="flex items-center gap-1.5 mb-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/30" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+              <div className={`w-1 h-1 rounded-full ${isPositive ? 'bg-emerald-500' : 'bg-red-500'}`} />
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
                 {data.country}
               </span>
             </div>
             
             {/* Price */}
-            <div className="flex items-baseline gap-1 tabular-nums">
-              <span className="text-2xl font-bold text-foreground">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-2xl font-mono font-bold text-foreground tracking-tight tabular-nums">
                 ${data.price.toFixed(2)}
               </span>
-              <span className="text-[10px] font-medium text-muted-foreground">/KG</span>
+              <span className="text-[10px] font-bold text-muted-foreground tracking-wider font-mono">/KG</span>
             </div>
           </div>
 
           {/* Change Badge */}
           <div
-            className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold tabular-nums border ${
+            className={`flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold tabular-nums border ${
               isPositive
-                ? 'bg-emerald-50/50 text-emerald-600 border-emerald-100'
-                : 'bg-red-50/50 text-red-600 border-red-100'
+                ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
+                : 'bg-red-500/10 text-red-600 border-red-500/20'
             }`}
           >
             {isPositive ? (
@@ -70,31 +92,22 @@ export default function PriceCard({ data, onClick }: PriceCardProps) {
           </div>
         </div>
 
-        {/* Recharts Sparkline */}
-        <div className="h-10 w-full">
+        {/* Recharts Sparkline - Refined for Institutional Look */}
+        <div className="h-12 w-full mt-2">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={sparklineData}>
               <defs>
                 <linearGradient id={`gradient-${data.code}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop 
-                    offset="5%" 
-                    stopColor={isPositive ? '#10b981' : '#ef4444'} 
-                    stopOpacity={0.3}
-                  />
-                  <stop 
-                    offset="95%" 
-                    stopColor={isPositive ? '#10b981' : '#ef4444'} 
-                    stopOpacity={0}
-                  />
+                  <stop offset="5%" stopColor={isPositive ? '#059669' : '#DC2626'} stopOpacity={0.1} />
+                  <stop offset="95%" stopColor={isPositive ? '#059669' : '#DC2626'} stopOpacity={0} />
                 </linearGradient>
               </defs>
               <YAxis domain={['dataMin - 0.1', 'dataMax + 0.1']} hide />
               <Area
                 type="monotone"
                 dataKey="value"
-                stroke={isPositive ? '#10b981' : '#ef4444'}
-                strokeWidth={1.5}
-                fillOpacity={1}
+                stroke={isPositive ? '#059669' : '#DC2626'}
+                strokeWidth={1.2}
                 fill={`url(#gradient-${data.code})`}
                 isAnimationActive={false}
               />

@@ -37,22 +37,22 @@ export default function Marketplace() {
   };
 
   return (
-    <main className="min-h-screen bg-muted/30">
+    <main className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-background border-b border-border">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="bg-background border-b border-foreground/5">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+              <h1 className="text-3xl sm:text-4xl font-display font-bold text-foreground tracking-tight">
                 Avocado Marketplace
               </h1>
-              <p className="text-muted-foreground mt-1">
+              <p className="text-sm font-medium text-muted-foreground mt-1 tracking-wide opacity-80 uppercase">
                 Connect directly with verified suppliers worldwide
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <Badge variant="secondary" className="bg-primary/10 text-primary">
-                <CheckCircle className="w-3.5 h-3.5 mr-1" />
+              <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 px-4 py-1.5 rounded-full border border-emerald-500/20 text-[10px] font-bold uppercase tracking-widest">
+                <CheckCircle className="w-3.5 h-3.5 mr-1.5" />
                 {marketplaceItems.length} Verified Suppliers
               </Badge>
             </div>
@@ -64,33 +64,33 @@ export default function Marketplace() {
         <div className="grid lg:grid-cols-4 gap-6">
           {/* Sidebar Filters */}
           <div className="lg:col-span-1">
-            <Card className="border-0 shadow-card bg-card sticky top-24">
-              <CardContent className="p-5">
-                <div className="flex items-center gap-2 mb-5">
+            <Card className="border border-foreground/10 shadow-none bg-card sticky top-24 rounded-leaf">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-2 mb-6">
                   <Filter className="w-4 h-4 text-primary" />
-                  <h3 className="font-semibold text-foreground">Filters</h3>
+                  <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground">Market Filters</h3>
                 </div>
 
                 {/* Search */}
-                <div className="mb-6">
-                  <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                    Search
+                <div className="mb-8">
+                  <label className="text-[10px] font-bold text-muted-foreground mb-2 block uppercase tracking-widest">
+                    Keyword Search
                   </label>
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-50" />
                     <Input
-                      placeholder="Farm, location, variety..."
+                      placeholder="Origin, variety..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10"
+                      className="pl-10 bg-white border-foreground/10 h-11 text-xs font-medium rounded-lg"
                     />
                   </div>
                 </div>
 
                 {/* Price Range */}
-                <div className="mb-6">
-                  <label className="text-sm font-medium text-muted-foreground mb-3 block">
-                    Price Range: ${priceRange[0]} - ${priceRange[1]}
+                <div className="mb-8">
+                  <label className="text-[10px] font-bold text-muted-foreground mb-4 block uppercase tracking-widest">
+                    Price Range: <span className="text-foreground">${priceRange[0]} - ${priceRange[1]}</span>
                   </label>
                   <Slider
                     value={priceRange}
@@ -102,26 +102,26 @@ export default function Marketplace() {
                 </div>
 
                 {/* Quick Stats */}
-                <div className="pt-5 border-t border-border">
-                  <h4 className="text-sm font-medium text-muted-foreground mb-3">
-                    Market Overview
+                <div className="pt-6 border-t border-foreground/5">
+                  <h4 className="text-[10px] font-bold text-muted-foreground mb-4 uppercase tracking-widest leading-none">
+                    Market Intelligence
                   </h4>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Lowest Price</span>
-                      <span className="font-semibold text-emerald-600">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-medium text-muted-foreground">Global Minimum</span>
+                      <span className="text-[11px] font-mono font-bold text-emerald-600">
                         ${Math.min(...marketplaceItems.map((i) => i.pricePerKg)).toFixed(2)}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Highest Price</span>
-                      <span className="font-semibold text-foreground">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-medium text-muted-foreground">Terminal High</span>
+                      <span className="text-[11px] font-mono font-bold text-foreground">
                         ${Math.max(...marketplaceItems.map((i) => i.pricePerKg)).toFixed(2)}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Average Rating</span>
-                      <span className="font-semibold text-amber-500">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-medium text-muted-foreground">Supplier Alpha</span>
+                      <span className="text-[11px] font-bold text-amber-600">
                         {(marketplaceItems.reduce((a, b) => a + b.rating, 0) / marketplaceItems.length).toFixed(1)} ★
                       </span>
                     </div>
@@ -134,78 +134,76 @@ export default function Marketplace() {
           {/* Product Grid */}
           <div className="lg:col-span-3">
             {/* Results Count */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-5 gap-4">
-              <p className="text-sm text-muted-foreground">
-                Showing <span className="font-semibold text-foreground">{filteredItems.length}</span> results
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2">
+              <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest opacity-70">
+                Tracking <span className="text-foreground">{filteredItems.length}</span> Active Listings
               </p>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Sort by:</span>
-                <select className="text-sm border rounded-lg px-3 py-1.5 bg-card text-foreground border-border">
-                  <option>Price: Low to High</option>
-                  <option>Price: High to Low</option>
-                  <option>Rating</option>
-                  <option>Quantity</option>
+                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Order by:</span>
+                <select className="text-[10px] font-bold uppercase tracking-widest border border-foreground/10 rounded-lg px-3 py-1.5 bg-white text-foreground focus:ring-0 outline-none">
+                  <option>Price Ascending</option>
+                  <option>Price Descending</option>
+                  <option>Rating (Top)</option>
+                  <option>Volume</option>
                 </select>
               </div>
             </div>
 
             {/* Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredItems.map((item) => (
                 <Card
                   key={item.id}
-                  className="group overflow-hidden border-0 shadow-card hover:shadow-lg transition-all duration-300 hover:scale-[1.02] bg-card"
+                  className="group overflow-hidden border border-foreground/10 shadow-none hover:border-foreground/20 transition-all duration-300 rounded-leaf bg-card relative"
                 >
                   <CardContent className="p-0">
                     {/* Image Placeholder */}
-                    <div className="relative h-44 bg-gradient-to-br from-[#e8f5e9] to-[#c8e6c9] flex items-center justify-center overflow-hidden">
-                      <div className="absolute inset-0 opacity-10">
-                        <div className="absolute top-4 left-4 w-16 h-16 rounded-full bg-[#4CAF50]" />
-                        <div className="absolute bottom-4 right-4 w-24 h-24 rounded-full bg-[#81C784]" />
-                      </div>
+                    <div className="relative h-44 bg-gradient-to-br from-[#e8f5e9] to-[#c8e6c9] dark:from-[#1a2e1c] dark:to-[#0f1d10] flex items-center justify-center overflow-hidden">
+                      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+                           style={{ backgroundImage: 'radial-gradient(currentColor 0.5px, transparent 0)', backgroundSize: '12px 12px' }} />
                       <div className="relative z-10 text-center">
-                        <div className="w-16 h-16 mx-auto mb-2 rounded-full bg-background/90 flex items-center justify-center shadow-md">
+                        <div className="w-16 h-16 mx-auto mb-2 rounded-full bg-white/90 dark:bg-black/90 flex items-center justify-center shadow-premium transition-transform duration-500 group-hover:scale-110">
                           <Package className="w-8 h-8 text-primary" />
                         </div>
-                        <Badge variant="secondary" className="bg-background/90 text-primary font-medium border-primary/20">
+                        <Badge variant="secondary" className="bg-white/90 dark:bg-black/90 text-[10px] font-bold uppercase tracking-widest text-primary border-primary/20">
                           {item.variety}
                         </Badge>
                       </div>
 
                       {/* Rating Badge */}
-                      <div className="absolute top-3 right-3 flex items-center gap-1 bg-background/95 backdrop-blur-sm px-2 py-1 rounded-full shadow-sm border border-border/50">
-                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                        <span className="text-xs font-semibold">{item.rating}</span>
+                      <div className="absolute top-4 right-4 flex items-center gap-1 bg-white/95 dark:bg-black/95 backdrop-blur-sm px-3 py-1 rounded-full border border-foreground/10 shadow-sm">
+                        <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
+                        <span className="text-[10px] font-bold">{item.rating}</span>
                       </div>
                     </div>
 
                     {/* Content */}
-                    <div className="p-5">
+                    <div className="p-6">
                       {/* Farm Name */}
-                      <h3 className="font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
+                      <h3 className="text-md font-display font-bold text-foreground mb-1 tracking-tight group-hover:text-primary transition-colors">
                         {item.farmName}
                       </h3>
 
                       {/* Location */}
-                      <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-4">
-                        <MapPin className="w-3.5 h-3.5" />
+                      <div className="flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground mb-6 opacity-70">
+                        <MapPin className="w-3 h-3" />
                         <span>
                           {item.location}, {item.country}
                         </span>
                       </div>
 
                       {/* Price & Quantity Row */}
-                      <div className="flex items-end justify-between mb-4">
+                      <div className="flex items-end justify-between mb-6 bg-muted/5 p-3 rounded-xl border border-foreground/5">
                         <div>
-                          <p className="text-xs text-muted-foreground mb-0.5">Price per kg</p>
-                          <p className="text-2xl font-bold text-primary">
+                          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1 opacity-60">Price/KG</p>
+                          <p className="text-2xl font-mono font-bold text-foreground tabular-nums tracking-tighter">
                             ${item.pricePerKg.toFixed(2)}
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="text-xs text-muted-foreground mb-0.5">Available</p>
-                          <p className="text-sm font-medium text-foreground">
-                            {item.quantity.toLocaleString()} kg
+                          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1 opacity-60">Lot Size</p>
+                          <p className="text-sm font-mono font-bold text-foreground tabular-nums">
+                            {item.quantity.toLocaleString()}kg
                           </p>
                         </div>
                       </div>
@@ -213,10 +211,10 @@ export default function Marketplace() {
                       {/* Contact Button */}
                       <Button
                         onClick={() => handleContact(item)}
-                        className="w-full bg-primary hover:bg-primary/90 text-white shadow-md hover:shadow-lg transition-all duration-200"
+                        className="w-full bg-foreground text-background hover:bg-foreground/95 px-6 h-12 text-[10px] font-bold uppercase tracking-[0.2em] rounded-xl transition-all shadow-none flex items-center justify-center gap-2"
                       >
-                        <ShoppingCart className="w-4 h-4 mr-2" />
-                        Contact Seller
+                        <ShoppingCart className="w-4 h-4" />
+                        Initiate Trade
                       </Button>
                     </div>
                   </CardContent>

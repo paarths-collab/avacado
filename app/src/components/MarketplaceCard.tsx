@@ -11,7 +11,7 @@ interface MarketplaceCardProps {
 
 export default function MarketplaceCard({ item, onBuy }: MarketplaceCardProps) {
   return (
-    <Card className="group overflow-hidden border-0 shadow-card hover:shadow-lg transition-all duration-300 hover:scale-[1.02] bg-card">
+    <Card className="group overflow-hidden border border-foreground/10 bg-card shadow-none hover:border-foreground/20 transition-all duration-300 rounded-leaf relative">
       <CardContent className="p-0">
         {/* Image Placeholder */}
         <div className="relative h-40 bg-gradient-to-br from-[#e8f5e9] to-[#c8e6c9] dark:from-[#1a2e1c] dark:to-[#0f1d10] flex items-center justify-center overflow-hidden">
@@ -38,14 +38,14 @@ export default function MarketplaceCard({ item, onBuy }: MarketplaceCardProps) {
         {/* Content */}
         <div className="p-5">
           {/* Farm Name */}
-          <h3 className="font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
+          <h3 className="font-display font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
             {item.farmName}
           </h3>
 
           {/* Location */}
           <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-4">
             <MapPin className="w-3.5 h-3.5" />
-            <span>
+            <span className="font-medium">
               {item.location}, {item.country}
             </span>
           </div>
@@ -53,14 +53,14 @@ export default function MarketplaceCard({ item, onBuy }: MarketplaceCardProps) {
           {/* Price & Quantity Row */}
           <div className="flex items-end justify-between mb-4">
             <div>
-              <p className="text-xs text-muted-foreground mb-0.5">Price per kg</p>
-              <p className="text-2xl font-bold text-primary">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Price per kg</p>
+              <p className="text-2xl font-mono font-bold text-primary tabular-nums tracking-tight">
                 ${item.pricePerKg.toFixed(2)}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-xs text-muted-foreground mb-0.5">Available</p>
-              <p className="text-sm font-medium text-foreground">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Available</p>
+              <p className="text-sm font-mono font-bold text-foreground tabular-nums">
                 {item.quantity.toLocaleString()} kg
               </p>
             </div>

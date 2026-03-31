@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { TrendingUp, TrendingDown, Filter, Download, Globe, Calendar } from 'lucide-react';
+import { TrendingUp, TrendingDown, Filter, Download, Globe, Calendar, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import PriceChart from '@/components/PriceChart';
 import MapChart from '@/components/MapChart';
+import TerminalLoader from '@/components/TerminalLoader';
 import CountryAnalyticsSheet from '@/components/CountryAnalyticsSheet';
 import { globalPrices } from '@/data/mockData';
 import type { PriceData } from '@/data/mockData';
@@ -15,6 +16,12 @@ export default function Prices() {
   const [selectedCountry, setSelectedCountry] = useState<string>('all');
   const [timeRange, setTimeRange] = useState<string>('30d');
   const [selectedCountryDetails, setSelectedCountryDetails] = useState<PriceData | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleRefresh = () => {
+    setLoading(true);
+    setTimeout(() => setLoading(false), 1500);
+  };
 
   const filteredPrices = useMemo(() => {
     if (selectedCountry === 'all') return globalPrices;
@@ -60,25 +67,35 @@ export default function Prices() {
   ];
 
   return (
-    <main className="min-h-screen bg-muted/30">
+    <main className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-background border-b border-border">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="bg-background border-b border-foreground/5">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+              <h1 className="text-3xl sm:text-4xl font-display font-bold text-foreground tracking-tight">
                 Global Avocado Prices
               </h1>
-              <p className="text-muted-foreground mt-1">
+              <p className="text-sm font-medium text-muted-foreground mt-1 tracking-wide opacity-80 uppercase">
                 Real-time price tracking and market analysis
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleRefresh}
+                disabled={loading}
+                className="bg-white border-foreground/10 hover:bg-secondary/50 rounded-lg h-10 px-5 text-[10px] font-bold uppercase tracking-widest transition-all"
+              >
+                <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
+              <Button variant="outline" size="sm" className="bg-white border-foreground/10 hover:bg-secondary/50 rounded-lg h-10 px-5 text-[10px] font-bold uppercase tracking-widest transition-all">
                 <Filter className="w-4 h-4 mr-2" />
                 Filters
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="bg-white border-foreground/10 hover:bg-secondary/50 rounded-lg h-10 px-5 text-[10px] font-bold uppercase tracking-widest transition-all">
                 <Download className="w-4 h-4 mr-2" />
                 Export
               </Button>
@@ -87,16 +104,22 @@ export default function Prices() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        {loading ? (
+          <div className="flex items-center justify-center min-h-[600px]">
+            <TerminalLoader />
+          </div>
+        ) : (
+          <>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
           {stats.map((stat, index) => (
-            <Card key={index} className="border-0 shadow-card bg-card">
-              <CardContent className="p-5">
+            <Card key={index} className="border border-foreground/10 shadow-none bg-card rounded-xl overflow-hidden hover:border-foreground/20 transition-all duration-300">
+              <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground mb-1">{stat.label}</p>
-                    <p className={`text-2xl font-bold ${
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-2">{stat.label}</p>
+                    <p className={`text-2xl font-mono font-bold tabular-nums tracking-tight ${
                       stat.isPositive !== undefined
                         ? stat.isPositive
                           ? 'text-emerald-600'
@@ -105,7 +128,7 @@ export default function Prices() {
                     }`}>
                       {stat.value}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{stat.subtext}</p>
+                    <p className="text-[10px] font-bold text-muted-foreground mt-1 opacity-60 italic">{stat.subtext}</p>
                   </div>
                   <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                     stat.isPositive !== undefined
@@ -172,7 +195,7 @@ export default function Prices() {
         </div>
 
         {/* Price Table */}
-        <Card className="border-0 shadow-card bg-card overflow-hidden">
+        <Card className="border border-foreground/10 shadow-none bg-card overflow-hidden rounded-leaf">
           <CardHeader className="pb-4">
             <CardTitle className="text-lg font-semibold">Detailed Price Data</CardTitle>
           </CardHeader>
@@ -243,7 +266,9 @@ export default function Prices() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </>
+    )}
+  </div>
       
       <CountryAnalyticsSheet 
         countryData={selectedCountryDetails}

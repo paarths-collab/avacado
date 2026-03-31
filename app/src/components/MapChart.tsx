@@ -44,10 +44,9 @@ export default function MapChart({
   };
 
   const getPriceColor = (price: number) => {
-    if (price < 2.5) return '#4CAF50';
-    if (price < 3.5) return '#81C784';
-    if (price < 4.5) return '#FFB74D';
-    return '#FF8A65';
+    if (price < 2.5) return 'var(--ripeness-unripe)';
+    if (price < 3.5) return 'var(--ripeness-optimal)';
+    return 'var(--ripeness-saturated)';
   };
 
   return (
@@ -55,23 +54,23 @@ export default function MapChart({
       {isExpanded && (
         <div className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm" onClick={() => setIsExpanded(false)} />
       )}
-      <Card className={`border-0 shadow-card bg-card overflow-hidden transition-all duration-300 ${isExpanded ? 'fixed inset-4 md:inset-8 z-50 flex flex-col' : ''}`}>
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-lg font-semibold text-foreground">
+      <Card className={`border border-foreground/10 shadow-none bg-card overflow-hidden transition-all duration-300 rounded-leaf ${isExpanded ? 'fixed inset-4 md:inset-8 z-50 flex flex-col' : ''}`}>
+        <CardHeader className="flex flex-row items-center justify-between pb-4">
+          <CardTitle className="text-xl font-display font-bold text-foreground">
             {title}
           </CardTitle>
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setIsExpanded(!isExpanded)}
-            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-secondary/50 rounded-lg"
           >
             {isExpanded ? <X className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
           </Button>
         </CardHeader>
         <CardContent className={`pt-0 relative ${isExpanded ? 'flex-1 min-h-0' : ''}`}>
           <div 
-            className="relative rounded-xl overflow-hidden bg-muted/20 w-full"
+            className="relative rounded-leaf overflow-hidden bg-muted/5 w-full border border-foreground/5"
             style={{ height: isExpanded ? '100%' : height }}
             onMouseMove={handleMouseMove}
           >
@@ -93,7 +92,7 @@ export default function MapChart({
                       (p) => p.code === countryCode
                     );
                     const isHighlighted = highlightCountryCode === 'all' || highlightCountryCode === countryCode;
-                    const baseColor = priceData ? getPriceColor(priceData.price) : '#e5e7eb';
+                    const baseColor = priceData ? getPriceColor(priceData.price) : 'hsl(var(--muted) / 0.3)';
 
                     return (
                       <Geography
@@ -109,7 +108,7 @@ export default function MapChart({
                             transition: 'all 0.3s',
                           },
                           hover: {
-                            fill: priceData && isHighlighted ? '#2E7D32' : (isHighlighted ? baseColor : '#f3f4f6'),
+                            fill: priceData && isHighlighted ? 'var(--ripeness-optimal)' : (isHighlighted ? baseColor : 'hsl(var(--muted) / 0.5)'),
                             outline: 'none',
                             cursor: priceData && isHighlighted ? 'pointer' : 'default',
                           },
@@ -149,16 +148,16 @@ export default function MapChart({
                   className="cursor-pointer"
                 >
                   <circle
-                    r={6}
-                    fill="#2E7D32"
-                    stroke="#ffffff"
-                    strokeWidth={2}
+                    r={5}
+                    fill="var(--ripeness-optimal)"
+                    stroke="white"
+                    strokeWidth={1.5}
                     className="transition-all duration-200"
                   />
                   <circle
                     r={12}
-                    fill="#2E7D32"
-                    opacity={0.2}
+                    fill="var(--ripeness-optimal)"
+                    opacity={0.1}
                     className="animate-pulse pointer-events-none"
                   />
                 </Marker>
@@ -167,58 +166,54 @@ export default function MapChart({
           </ComposableMap>
 
           {/* Legend */}
-          <div className="absolute bottom-4 left-4 bg-card/95 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-border/50">
-            <p className="text-xs font-medium text-muted-foreground mb-2">
-              Price per kg (USD)
+          <div className="absolute bottom-4 left-4 bg-card/90 backdrop-blur-md rounded-leaf p-4 border border-foreground/10">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">
+              Market Ripeness Density
             </p>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded-sm bg-[#4CAF50]" />
-                <span className="text-xs text-muted-foreground">&lt;$2.5</span>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-[#B5FF42]" />
+                <span className="text-[10px] font-bold text-foreground/70 uppercase">Low Supply (Unripe)</span>
               </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded-sm bg-[#81C784]" />
-                <span className="text-xs text-muted-foreground">$2.5-3.5</span>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-[#166534]" />
+                <span className="text-[10px] font-bold text-foreground/70 uppercase">Optimal Flow</span>
               </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded-sm bg-[#FFB74D]" />
-                <span className="text-xs text-muted-foreground">$3.5-4.5</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded-sm bg-[#FF8A65]" />
-                <span className="text-xs text-muted-foreground">&gt;$4.5</span>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-[#3D2B1F]" />
+                <span className="text-[10px] font-bold text-foreground/70 uppercase">Saturated Market</span>
               </div>
             </div>
           </div>
 
           {/* Flash Card */}
           {selectedCountry && (
-            <div className="absolute top-4 right-4 bg-card/95 backdrop-blur-md rounded-xl p-5 shadow-2xl border border-border/60 min-w-[220px] z-10 animate-in fade-in zoom-in-95 duration-200">
-              <div className="flex justify-between items-start mb-3">
-                <h3 className="font-bold text-foreground text-lg tracking-tight">{selectedCountry.country}</h3>
+            <div className="absolute top-4 right-4 bg-card/95 backdrop-blur-md rounded-leaf p-6 shadow-2xl border border-foreground/10 min-w-[240px] z-10 animate-in fade-in zoom-in-95 duration-200">
+              <div className="flex justify-between items-start mb-4">
+                <h3 className="font-display font-bold text-foreground text-xl tracking-tight">{selectedCountry.country}</h3>
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="h-6 w-6 -mt-1 -mr-2 text-muted-foreground hover:text-foreground"
+                  className="h-6 w-6 -mt-1 -mr-1 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary/50"
                   onClick={() => setSelectedCountry(null)}
                 >
                   <X className="h-4 w-4" />
                 </Button>
               </div>
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div>
-                  <p className="text-[11px] text-muted-foreground uppercase font-bold tracking-wider mb-1">Current Price</p>
-                  <p className="text-3xl font-bold text-primary tabular-nums">
+                  <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-[0.2em] mb-1.5 opacity-70">Current Price</p>
+                  <p className="text-3xl font-mono font-bold text-foreground tabular-nums tracking-tight">
                     ${selectedCountry.price.toFixed(2)}
-                    <span className="text-sm font-medium text-muted-foreground ml-1">/kg</span>
+                    <span className="text-[10px] font-bold text-muted-foreground ml-2">USD/KG</span>
                   </p>
                 </div>
                 <div>
-                  <p className="text-[11px] text-muted-foreground uppercase font-bold tracking-wider mb-1">Price Trend (30D)</p>
-                  <div className={`inline-flex items-center gap-1.5 font-bold px-2.5 py-1 rounded-md text-sm ${
-                    selectedCountry.change >= 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'
+                  <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-[0.2em] mb-1.5 opacity-70">Price Trend (30D)</p>
+                  <div className={`inline-flex items-center gap-1.5 font-mono font-bold px-3 py-1 rounded-full text-xs ${
+                    selectedCountry.change >= 0 ? 'bg-emerald-500/10 text-emerald-600' : 'bg-red-500/10 text-red-600'
                   }`}>
-                    {selectedCountry.change >= 0 ? '+' : ''}{selectedCountry.change.toFixed(1)}%
+                    {selectedCountry.change >= 0 ? '↑' : '↓'}{Math.abs(selectedCountry.change).toFixed(1)}%
                   </div>
                 </div>
               </div>
